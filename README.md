@@ -8,4 +8,6 @@ Les données de 2022 manquent d'amplitude si on fait l'analyse en gardant les ch
 Les résultats ont été aggrégés par villes, ce qui augmente l'amplitude et permet d'obtenir un ordre de grandeur robuste suffisant,
 qui est l'une des conditions préalables à l'utilisation de la loi de Benford.
 
+Le code pour l'appli est sur le fichier newapp.R
+
 L'appli est disponible à cette adresse :  https://arnaudraulet.shinyapps.io/testApp/
