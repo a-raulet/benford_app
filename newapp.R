@@ -27,7 +27,7 @@ ui <- fluidPage(
       tabsetPanel(
         tabPanel("Graphique",
                  plotOutput("benford_plot"),
-                 h3("Conditions préalables a remplir :"),
+                 h3("Conditions préalables à remplir :"),
                  tags$div(style = "display: flex; align-items: center;",
                           tags$p("- Nombre d'observations :  ", style = "margin-right: 5px; line-height: 1;"),
                           tags$div(
@@ -78,10 +78,10 @@ ui <- fluidPage(
         tabPanel("Commentaires",
                  h5("Deux éléments sont nécessaires pour pouvoir observer un comportement suivant la loi de Benford : un ordre de grandeur robuste supérieur à 3 (acceptable à partir de 2,5), et une distribution asymétrique avec une longue traine vers la droite."),
                  tags$br(),
-                 h5("De 1965 a 2012, les données par circonscriptions sont utilisées, mais l'analyse de Benford ne peut pas etre appliquée : l'ordre de grandeur robuste est trop faible, et les distributions des données sont symétriques, suivant davantage une courbe normale."),
-                 h5("De même, en 2017, les résultats par cantons ont été utilisées mais les conditions d'application ne sont pas remplies non plus. Pour le deuxième tour, certains cantons ayant le même nom (pour les plus grosses agglomérations) ont été regroupés, mais l'ordre de grandeur reste trop bas."),
+                 h5("De 1965 à 2012, les données par circonscriptions sont utilisées, mais l'analyse de Benford ne peut pas etre appliquée : l'ordre de grandeur robuste est trop faible, et les distributions des données sont symétriques, suivant davantage une courbe normale."),
+                 h5("De même, en 2017 pour le deuxième tour, les résultats par cantons ont été utilisées mais les conditions d'application ne sont pas remplies non plus. Certains cantons ayant le même nom (pour les plus grosses agglomérations) ont été regroupés, mais l'ordre de grandeur reste trop bas."),
                  tags$br(),
-                 h5("Seules les données de 2022 (données de chaque bureau de votes regroupées par villes) remplissent les conditions (à part pour certains candidats), et deux tests sont effectués pour vérifier si les données sont conformes ou non avec la loi de Benford : la somme des carrés des différences de Kossovsky, et l'écart moyen absolu de Nigrini."),
+                 h5("Les données de 2022 (données de chaque bureau de votes regroupées par villes) et de 2017 (1er tour) remplissent les conditions (à part pour certains candidats), et deux tests sont effectués pour vérifier si les données sont conformes ou non avec la loi de Benford : la somme des carrés des différences de Kossovsky, et l'écart moyen absolu de Nigrini."),
                  tags$br(),
                  h5("Par ailleurs, l'analyse régionale n'est valable que pour les plus gros candidats principalement (toujours pour 2022), et encore, pas sur l'ensemble des regions, l'ordre de grandeur robuste (OGR) étant trop bas dans certaines régions, ou alors le nombre de communes à l'intérieur de certains régions, notamment en Outre-Mer, est extrêmement bas."),
                  tags$br(),
@@ -181,7 +181,7 @@ server <- function(input, output, session) {
 
     # Plot observed vs. expected frequencies
     plot_data <- all_digits %>%
-      left_join(first_digits, by = c("Digit" = if(input$n_digits == 1) "first_digit" else "first_two_digits")) %>%
+      left_join(first_digits, by = c("Digit" = ifelse(input$n_digits == 1, "first_digit", "first_two_digits"))) %>%
       rename(Observed = freq) %>%
       replace_na(list(Observed = 0)) %>%
       mutate(Expected = benford)
