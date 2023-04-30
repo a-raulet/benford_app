@@ -12,22 +12,22 @@ library(rlang)
 
 ui <- fluidPage(
   tags$head(tags$style(HTML(".sidebar, .well {background-color : lightblue;}"))),
-  titlePanel("Analyse des elections presidentielles selon la loi de Benford"),
+  titlePanel("Analyse des élections présidentielles selon la loi de Benford"),
   sidebarLayout(
     sidebarPanel(
-      selectInput("election_year", "Annee de l'election :", choices = c("1965", "1969", "1974", "1981", "1988",
+      selectInput("election_year", "Annee de l'élection :", choices = c("1965", "1969", "1974", "1981", "1988",
                                                                         "1995", "2002", "2007", "2012", "2017", "2022")),
-      selectInput("election_round", "Tour de l'election :", choices = c("tour 1", "tour 2")),
+      selectInput("election_round", "Tour de l'élection :", choices = c("tour 1", "tour 2")),
       uiOutput("candidate_list"),
       radioButtons("n_digits", "Nombre de chiffres pour la loi de Benford :", choices = c(1, 2), 
                    selected = 1),
-      radioButtons("analysis_option", "Option d'analyse :", choices = c("Nationale", "Par regions"))
+      radioButtons("analysis_option", "Options d'analyse :", choices = c("Nationale", "Par regions"))
     ),
     mainPanel(
       tabsetPanel(
         tabPanel("Graphique",
                  plotOutput("benford_plot"),
-                 h3("Conditions prealables a remplir :"),
+                 h3("Conditions préalables a remplir :"),
                  tags$div(style = "display: flex; align-items: center;",
                           tags$p("- Nombre d'observations :  ", style = "margin-right: 5px; line-height: 1;"),
                           tags$div(
@@ -43,7 +43,7 @@ ui <- fluidPage(
                               tags$span("\U{274C}", style = "color: red;"))
                           )),
                  tags$div(style = "display: flex; align-items: center;",
-                          tags$p("- Ordre de grandeur robuste (superieur a 3) : "),
+                          tags$p("- Ordre de grandeur robuste (supérieur à 3) : "),
                           textOutput("rom"),
                           conditionalPanel(condition = "output.rom > 3",
                                            tags$span("\U{2705}", style = "color: green;")
@@ -51,13 +51,13 @@ ui <- fluidPage(
                           conditionalPanel(
                             condition = "output.rom <= 3",
                             tags$span("\U{274C}", style = "color: red;"))),
-                 h5("(Un ordre de grandeur robuste (OGR) entre 2,5 et 3 peut etre suffisant pour obtenir une distribution de Benford, mais pas en dessous de 2,5.)"),
+                 h5("(Un ordre de grandeur robuste (OGR) entre 2,5 et 3 peut être suffisant pour obtenir une distribution de Benford, mais pas en dessous de 2,5.)"),
                  tags$div(style = "display: flex; align-items: center;",
-                          tags$p("- Asymetrie de la distribution vers la droite : Voir Histogramme")),
-                 h3("Tests de conformite avec la loi de Benford :"),
-                 h5(tags$i("(Voir 'Carte' pour les resultats par regions)")),
+                          tags$p("- Asymétrie de la distribution vers la droite : Voir Histogramme")),
+                 h3("Tests de conformité avec la loi de Benford :"),
+                 h5(tags$i("(Voir 'Carte' pour les résultats par regions)")),
                  tags$div(style = "display: flex; align-items: center;",
-                          tags$p("- Somme des carres des differences (SSD) : "),
+                          tags$p("- Somme des carrés des différences (SSD) : "),
                           tags$span(textOutput("ssd"), style = "margin-right: 10px;"),
                           uiOutput("ssd_status")),
                  tags$div(style = "display: flex; align-items: center;",
@@ -69,23 +69,23 @@ ui <- fluidPage(
                  tableOutput("ssd_table")),
         tabPanel("Histogramme", 
                  plotOutput("histogram"),
-                 h5(tags$i("Source des donnees : Ministere de l'Interieur, data.gouv.fr.")),
+                 h5(tags$i("Source des données : Ministère de l'Intérieur, data.gouv.fr.")),
                  h5(tags$i("References :")),
                  h5(tags$i("- Alex Ely Kossovsky, On the Mistaken Use of the Chi-Square Test in Benford's Law, 2021")),
                  h5(tags$i("- Alex Ely Kossovsky, Benford's Law: Theory, The General Law of Relative Quantities, And Forensic Fraud Detection Applications, 2015")),
                  h5(tags$i("- Mark J. Nigrini, Benford's Law: Applications for Forensic Accounting, Auditing, and Fraud Detection, 2012")),
                  h5(tags$i("- Steven J. Miller, Benford's Law: Theory and Application, 2015"))),
         tabPanel("Commentaires",
-                 h5("Deux elements sont necessaires pour pouvoir observer un comportement suivant la loi de Benford : un ordre de grandeur robuste superieur a 3 (acceptable a partir de 2,5), et une distribution asymetrique avec une longue traine vers la droite."),
+                 h5("Deux éléments sont nécessaires pour pouvoir observer un comportement suivant la loi de Benford : un ordre de grandeur robuste supérieur à 3 (acceptable à partir de 2,5), et une distribution asymétrique avec une longue traine vers la droite."),
                  tags$br(),
-                 h5("De 1965 a 2012, les donnees par circonscriptions sont utilisees, mais l'analyse de Benford ne peut pas etre appliquee : l'ordre de grandeur robuste est trop faible, et les distributions des donnees sont symetriques, suivant davantage une courbe normale."),
-                 h5("De meme, en 2017, les resultats par cantons ont ete utilisees mais les conditions d'application ne sont pas remplies non plus. Pour le deuxieme tour, certains cantons ayant le meme nom (pour les plus grosses agglomerations) ont ete regroupes, mais l'ordre de grandeur reste trop bas."),
+                 h5("De 1965 a 2012, les données par circonscriptions sont utilisées, mais l'analyse de Benford ne peut pas etre appliquée : l'ordre de grandeur robuste est trop faible, et les distributions des données sont symétriques, suivant davantage une courbe normale."),
+                 h5("De même, en 2017, les résultats par cantons ont été utilisées mais les conditions d'application ne sont pas remplies non plus. Pour le deuxième tour, certains cantons ayant le même nom (pour les plus grosses agglomérations) ont été regroupés, mais l'ordre de grandeur reste trop bas."),
                  tags$br(),
-                 h5("Seules les donnees de 2022 (donnees de chaque bureau de votes regroupees par villes) remplissent les conditions (a part pour certains candidats), et deux tests sont effectues pour verifier si les donnees sont conformes ou non avec la loi de Benford : la somme des carres des differences, et l'ecart moyen absolu."),
+                 h5("Seules les données de 2022 (données de chaque bureau de votes regroupées par villes) remplissent les conditions (à part pour certains candidats), et deux tests sont effectués pour vérifier si les données sont conformes ou non avec la loi de Benford : la somme des carrés des différences de Kossovsky, et l'écart moyen absolu de Nigrini."),
                  tags$br(),
-                 h5("Par ailleurs, l'analyse regionale n'est valable que pour les plus gros candidats principalement (toujours pour 2022), et encore, pas sur l'ensemble des regions, l'ordre de grandeur robuste (OGR) etant trop bas dans certaines regions."),
+                 h5("Par ailleurs, l'analyse régionale n'est valable que pour les plus gros candidats principalement (toujours pour 2022), et encore, pas sur l'ensemble des regions, l'ordre de grandeur robuste (OGR) étant trop bas dans certaines régions, ou alors le nombre de communes à l'intérieur de certains régions, notamment en Outre-Mer, est extrêmement bas."),
                  tags$br(),
-                 h5("Pour en savoir plus, voir references sous l'histogramme.")
+                 h5("Pour en savoir plus, voir références sous l'histogramme.")
                     )
       )
     )
@@ -353,9 +353,9 @@ server <- function(input, output, session) {
         } else if (ssd_value() >= 100) {
           tags$span("\U{274C}", style = "color: red;")
         } else if (ssd_value() >= 2 & ssd_value() < 25) {
-          tags$span("Acceptable")
+          tags$span("-> Acceptable")
         } else if (ssd_value() >= 25 & ssd_value() < 100) {
-          tags$span("Legerement Benford")
+          tags$span("- > Légèrement Benford")
         }
       },
       "2" = {
@@ -366,7 +366,7 @@ server <- function(input, output, session) {
         } else if (ssd_value() >= 2 & ssd_value() < 10) {
           tags$span("Acceptable")
         } else if (ssd_value() >= 10 & ssd_value() < 50) {
-          tags$span("Legerement Benford")
+          tags$span("Légèrement Benford")
         }
       }
     )
@@ -405,9 +405,9 @@ server <- function(input, output, session) {
         } else if (mad_value() >= 0.015) {
           tags$span("\U{274C}", style = "color: red;")
         } else if (mad_value() >= 0.006 & mad_value() < 0.012) {
-          tags$span("Acceptable")
+          tags$span("-> Acceptable")
         } else if (mad_value() >= 0.012 & mad_value() < 0.015) {
-          tags$span("Legerement Benford")
+          tags$span("-> Légèrement Benford")
         }
       },
       "2" = {
@@ -416,9 +416,9 @@ server <- function(input, output, session) {
         } else if (mad_value() >= 0.0022) {
           tags$span("\U{274C}", style = "color: red;")
         } else if (mad_value() >= 0.0012 & mad_value() < 0.0018) {
-          tags$span("Acceptable")
+          tags$span("-> Acceptable")
         } else if (mad_value() >= 0.0018 & mad_value() < 0.0022) {
-          tags$span("Legerement Benford")
+          tags$span("-> Légèrement Benford")
         }
       }
     )
@@ -478,7 +478,7 @@ server <- function(input, output, session) {
       national_data$Palier_MAD <- cut(
         national_data$MAD,
         breaks = c(0, 0.006, 0.012, 0.015, Inf),
-        labels = c("Conforme", "Acceptable", "Legerement Benford", "Non conforme"),
+        labels = c("Conforme", "Acceptable", "Légèrement Benford", "Non conforme"),
         right = FALSE
       )
       
@@ -509,7 +509,7 @@ server <- function(input, output, session) {
       stats_by_region_complete$Palier_MAD <- cut(
         stats_by_region_complete$MAD,
         breaks = c(0, 0.006, 0.012, 0.015, Inf),
-        labels = c("Conforme", "Acceptable", "Legerement Benford", "Non conforme"),
+        labels = c("Conforme", "Acceptable", "Légèrement Benford", "Non conforme"),
         right = FALSE
       )
       
@@ -578,7 +578,7 @@ server <- function(input, output, session) {
         position = "topright",
         title = "Paliers SSD",
         colors = c("green", "lightgreen", "yellow", "red"),
-        labels = c("Parfaitement conforme", "Acceptable", "Legerement Benford", "Non conforme"),
+        labels = c("Parfaitement conforme", "Acceptable", "Légèrement Benford", "Non conforme"),
         opacity = 1
       )
     
