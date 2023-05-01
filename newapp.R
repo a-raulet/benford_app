@@ -1,5 +1,5 @@
 options(encoding = "UTF-8")
-Sys.setlocale("LC_ALL", "French_France.UTF-8")
+Sys.setlocale("LC_ALL", "fr_FR.utf8")
 
 
 library(shiny)
