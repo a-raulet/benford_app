@@ -1,3 +1,7 @@
+options(encoding = "UTF-8")
+Sys.setlocale("LC_ALL", "French_France.UTF-8")
+
+
 library(shiny)
 library(readxl)
 library(tidyverse)
@@ -15,7 +19,7 @@ ui <- fluidPage(
   titlePanel("Analyse des élections présidentielles selon la loi de Benford"),
   sidebarLayout(
     sidebarPanel(
-      selectInput("election_year", "Annee de l'élection :", choices = c("1965", "1969", "1974", "1981", "1988",
+      selectInput("election_year", "Année de l'élection :", choices = c("1965", "1969", "1974", "1981", "1988",
                                                                         "1995", "2002", "2007", "2012", "2017", "2022")),
       selectInput("election_round", "Tour de l'élection :", choices = c("tour 1", "tour 2")),
       uiOutput("candidate_list"),
@@ -70,7 +74,7 @@ ui <- fluidPage(
         tabPanel("Histogramme", 
                  plotOutput("histogram"),
                  h5(tags$i("Source des données : Ministère de l'Intérieur, data.gouv.fr.")),
-                 h5(tags$i("References :")),
+                 h5(tags$i("Références :")),
                  h5(tags$i("- Alex Ely Kossovsky, On the Mistaken Use of the Chi-Square Test in Benford's Law, 2021")),
                  h5(tags$i("- Alex Ely Kossovsky, Benford's Law: Theory, The General Law of Relative Quantities, And Forensic Fraud Detection Applications, 2015")),
                  h5(tags$i("- Mark J. Nigrini, Benford's Law: Applications for Forensic Accounting, Auditing, and Fraud Detection, 2012")),
@@ -78,12 +82,12 @@ ui <- fluidPage(
         tabPanel("Commentaires",
                  h5("Deux éléments sont nécessaires pour pouvoir observer un comportement suivant la loi de Benford : un ordre de grandeur robuste supérieur à 3 (acceptable à partir de 2,5), et une distribution asymétrique avec une longue traine vers la droite."),
                  tags$br(),
-                 h5("De 1965 à 2012, les données par circonscriptions sont utilisées, mais l'analyse de Benford ne peut pas etre appliquée : l'ordre de grandeur robuste est trop faible, et les distributions des données sont symétriques, suivant davantage une courbe normale."),
+                 h5("De 1965 à 2012, les données par circonscriptions sont utilisées, mais l'analyse de Benford ne peut pas être appliquée : l'ordre de grandeur robuste est trop faible, et les distributions des données sont symétriques, suivant davantage une courbe normale."),
                  h5("De même, en 2017 pour le deuxième tour, les résultats par cantons ont été utilisées mais les conditions d'application ne sont pas remplies non plus. Certains cantons ayant le même nom (pour les plus grosses agglomérations) ont été regroupés, mais l'ordre de grandeur reste trop bas."),
                  tags$br(),
-                 h5("Les données de 2022 (données de chaque bureau de votes regroupées par villes) et de 2017 (1er tour) remplissent les conditions (à part pour certains candidats), et deux tests sont effectués pour vérifier si les données sont conformes ou non avec la loi de Benford : la somme des carrés des différences de Kossovsky, et l'écart moyen absolu de Nigrini."),
+                 h5("Les données de 2012 à 2022 (données de chaque bureau de votes regroupées par villes) et de 2017 (1er tour) remplissent les conditions (à part pour certains candidats), et deux tests sont effectués pour vérifier si les données sont conformes ou non avec la loi de Benford : la somme des carrés des différences de Kossovsky, et l'écart moyen absolu de Nigrini."),
                  tags$br(),
-                 h5("Par ailleurs, l'analyse régionale n'est valable que pour les plus gros candidats principalement (toujours pour 2022), et encore, pas sur l'ensemble des regions, l'ordre de grandeur robuste (OGR) étant trop bas dans certaines régions, ou alors le nombre de communes à l'intérieur de certains régions, notamment en Outre-Mer, est extrêmement bas."),
+                 h5("Par ailleurs, l'analyse régionale n'est valable que pour les plus gros candidats principalement (toujours de 2012 à 2022), et encore, pas sur l'ensemble des regions, l'ordre de grandeur robuste (OGR) étant trop bas dans certaines régions, ou alors le nombre de communes à l'intérieur de certains régions, notamment en Outre-Mer, est extrêmement bas."),
                  tags$br(),
                  h5("Pour en savoir plus, voir références sous l'histogramme.")
                     )
